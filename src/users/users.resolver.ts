@@ -1,3 +1,5 @@
+import { AuthGuard } from './../auth/auth.guard';
+import { AuthUser } from './../auth/auth-user.decorator';
 import { LoginOutput, LoginInput } from './dtos/login.dto';
 import {
   CreateAccountOutput,
@@ -6,15 +8,11 @@ import {
 import { UsersService } from './users.service';
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { User } from './entities/user.entity';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver((of) => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
-
-  @Query((returns) => Boolean)
-  hi() {
-    return true;
-  }
 
   @Mutation((returns) => CreateAccountOutput)
   async createAccount(
@@ -42,12 +40,15 @@ export class UsersResolver {
     }
   }
 
+  //@AuthUser 대신 @Context 사용 가능
+  // if (!context.user) {
+  //   return;
+  // } else {
+  //   return context.user;
+  // }
   @Query((returns) => User)
-  me(@Context() context) {
-    if (!context.user) {
-      return;
-    } else {
-      return context.user;
-    }
+  @UseGuards(AuthGuard)
+  me(@AuthUser() authUser: User) {
+    return authUser;
   }
 }
