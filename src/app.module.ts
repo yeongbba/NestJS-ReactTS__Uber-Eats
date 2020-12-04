@@ -1,3 +1,4 @@
+import { Verification } from './users/entities/verification.entity';
 import { Restaurant } from './restaurants/entities/restaurant.entity';
 import {
   Module,
@@ -44,7 +45,7 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Restaurant],
+      entities: [User, Verification],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
