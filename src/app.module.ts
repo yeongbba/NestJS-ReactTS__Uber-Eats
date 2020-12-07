@@ -1,3 +1,5 @@
+import { Category } from './restaurants/entities/category.entity';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { Verification } from './users/entities/verification.entity';
 import {
   Module,
@@ -49,13 +51,12 @@ import { MailModule } from './mail/mail.module';
       synchronize: process.env.NODE_ENV !== 'prod',
       logging:
         process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [User, Verification],
+      entities: [User, Verification, Restaurant, Category],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
-    UsersModule,
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
     }),
@@ -64,6 +65,9 @@ import { MailModule } from './mail/mail.module';
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    AuthModule,
+    UsersModule,
+    RestaurantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
