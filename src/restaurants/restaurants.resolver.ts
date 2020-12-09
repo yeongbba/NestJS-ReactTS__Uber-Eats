@@ -1,3 +1,4 @@
+import { EditDishOutput, EditDishInput } from './dtos/edit-dish.dto';
 import { Dish } from './entities/dish.entity';
 import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
 import { CategoryOutput, CategoryInput } from './dtos/category.dto';
@@ -128,5 +129,14 @@ export class DishResolver {
     @Args('input') createDishInput: CreateDishInput,
   ): Promise<CreateDishOutput> {
     return this.restaurantService.createDish(owner, createDishInput);
+  }
+
+  @Mutation((type) => EditDishOutput)
+  @Role(['Owner'])
+  editDish(
+    @AuthUser() owner: User,
+    @Args('input') editDishInput: EditDishInput,
+  ): Promise<EditDishOutput> {
+    return this.restaurantService.editDish(owner, editDishInput);
   }
 }
