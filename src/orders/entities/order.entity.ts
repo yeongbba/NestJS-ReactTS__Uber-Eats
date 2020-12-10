@@ -1,3 +1,4 @@
+import { OrderItem } from './order-item.entity';
 import {
   Field,
   Float,
@@ -61,6 +62,11 @@ export class Order extends CoreEntity {
     eager: true,
   })
   restaurant?: Restaurant;
+
+  @Field((type) => [OrderItem])
+  @ManyToMany((type) => OrderItem, { eager: true })
+  @JoinTable()
+  items: OrderItem[];
 
   @Column({ nullable: true })
   @Field((type) => Float, { nullable: true })
