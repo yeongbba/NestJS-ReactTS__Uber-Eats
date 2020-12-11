@@ -66,6 +66,7 @@ import { OrdersModule } from './orders/orders.module';
       ],
     }),
     GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
