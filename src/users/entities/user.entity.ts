@@ -1,3 +1,4 @@
+import { Payment } from './../../payments/entities/payment.entity';
 import { Order } from './../../orders/entities/order.entity';
 import {
   Field,
@@ -51,6 +52,10 @@ export class User extends CoreEntity {
   @Field((type) => [Order])
   @OneToMany((type) => Order, (order) => order.customer)
   orders: Order[];
+
+  @Field((type) => [Payment])
+  @OneToMany((type) => Payment, (payment) => payment.user, { eager: true })
+  payments: Payment[];
 
   @Field((type) => [Order])
   @OneToMany((type) => Order, (order) => order.driver)
