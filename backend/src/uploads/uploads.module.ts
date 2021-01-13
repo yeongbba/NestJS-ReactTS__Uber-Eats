@@ -1,4 +1,3 @@
-import { UploadsModuleOptions } from './uploads.interfaces';
 import { Module } from '@nestjs/common';
 import { UploadsController } from './uploads.controller';
 import { ConfigService } from '@nestjs/config';
