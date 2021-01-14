@@ -25,6 +25,7 @@ import {
   EditRestaurantOutput,
   EditRestaurantInput,
 } from './dtos/edit-restaurant.dto';
+import { MyRestaurantInput, MyRestaurantOutput } from './dtos/my-restaurant';
 import { Category } from './entities/category.entity';
 import { Restaurant } from './entities/restaurant.entity';
 import { Injectable } from '@nestjs/common';
@@ -377,6 +378,27 @@ export class RestaurantService {
       return {
         ok: false,
         error: 'Could not find restaurants.',
+      };
+    }
+  }
+
+  async myRestaurant(
+    owner: User,
+    { id }: MyRestaurantInput,
+  ): Promise<MyRestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne(
+        { owner, id },
+        { relations: ['menu', 'orders'] },
+      );
+      return {
+        restaurant,
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not find restaurant',
       };
     }
   }
