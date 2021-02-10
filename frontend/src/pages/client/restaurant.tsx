@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
+import { CreateOrderItemInput } from "../../__generated__/globalTypes";
 import {
   restaurant,
   restaurantVariables,
@@ -35,7 +36,6 @@ const CREATE_ORDER_MUTATION = gql`
   }
 `;
 
-
 interface IRestaurantParams {
   id: string;
 }
@@ -58,8 +58,19 @@ export const Restaurant = () => {
   const triggerStartOrder = () => {
     setOrderStarted(true);
   };
+  const isSelected = (dishId: number) => {
+    return Boolean(orderItems.find((order) => order.dishId === dishId));
+  };
   const addItemToOrder = (dishId: number) => {
-    setOrderItems((current) => [{ dishId }]);
+    if (isSelected(dishId)) {
+      return;
+    }
+    setOrderItems((current) => [{ dishId }, ...current]);
+  };
+  const removeFromOrder = (dishId: number) => {
+    setOrderItems((current) =>
+      current.filter((dish) => dish.dishId !== dishId)
+    );
   };
   console.log(orderItems);
 
@@ -86,11 +97,12 @@ export const Restaurant = () => {
       </div>
       <div className="container pb-32 flex flex-col items-end mt-20">
         <button onClick={triggerStartOrder} className="btn px-10">
-          Start Order
+          {orderStarted ? "Ordering" : "Start Order"}
         </button>
         <div className="w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
           {data?.restaurant.restaurant?.menu.map((dish, index) => (
             <Dish
+              isSelected={isSelected(dish.id)}
               id={dish.id}
               orderStarted={orderStarted}
               key={index}
@@ -100,6 +112,7 @@ export const Restaurant = () => {
               isCustomer={true}
               options={dish.options}
               addItemToOrder={addItemToOrder}
+              removeFromOrder={removeFromOrder}
             />
           ))}
         </div>
